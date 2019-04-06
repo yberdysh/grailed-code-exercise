@@ -39,26 +39,26 @@ describe User, '.resolve_collisions' do
     # rowena0 -> rowena1 id: 1045
     # lightning -> lightning1 id: 3264
     # adella9 -> adella10 id: 3304
-    # demetris10 -> demetris12 id: 9513
+    # claudia10 -> claudia11 id: 3008
+
+    #<User:0x007ffb70d12248 id: 862, username: "demetris7">, stays same
+    #<User:0x007ffb7585b5d8 id: 1398, username: "demetris10">, stays same
+    #<User:0x007ffb70a62ea8 id: 3998, username: "demetris9">, stays same
+    #<User:0x007ffb74912ce8 id: 7831, username: "demetris9">, -> demetris11
+    #<User:0x007ffb71fe2b98 id: 9513, username: "demetris10"> -> demetris12
 
     user1 = result.find{|user| user.id == 1045}
     user2 = result.find{|user| user.id == 3264}
     user3 = result.find{|user| user.id == 3304}
-    user4 = result.find{|user| user.id == 9513}
+    user4 = result.find{|user| user.id == 3008}
+    demetris1 = result.find{|user| user.id == 7831}
+    demetris2 = result.find{|user| user.id == 9513}
     expect(user1).to have_attributes(username: "rowena1")
     expect(user2).to have_attributes(username: "lightning1")
     expect(user3).to have_attributes(username: "adella10")
-    expect(user4).to have_attributes(username: "demetris11")
+    expect(user4).to have_attributes(username: "claudia11")
+    expect(demetris1).to have_attributes(username: "demetris11")
+    expect(demetris2).to have_attributes(username: "demetris12")
+
   end
 end
-
-# Prefix instance methods with a '#'
-# describe User, '#name' do
-#   it 'returns the concatenated first and last name' do
-#     # setup
-#     user = build(:user, first_name: 'Josh', last_name: 'Steiner')
-
-#     # excercise and verify
-#     expect(user.name).to eq 'Josh Steiner'
-#   end
-# end

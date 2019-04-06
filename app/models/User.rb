@@ -23,6 +23,9 @@ class User < ActiveRecord::Base
   def self.resolve_collisions(dry_run = nil)
     affected_rows = []
     self.all.each do |user|
+      # if user.username.include?("demetris")
+      #   binding.pry
+      # end
       if !UNIQUE_USERNAMES.include?(user.username)
         UNIQUE_USERNAMES.add(user.username)
         # adds a newly seen unique username to the cache
@@ -35,6 +38,8 @@ class User < ActiveRecord::Base
     return affected_rows
   end
 
+  # 862 demetris7 -> ?
+  # demetris10
 
   def handle_found_collision(dry_run = nil)
     # resolve collision, renames the user, adds new username to cache
@@ -55,6 +60,9 @@ class User < ActiveRecord::Base
     # username after any trailing numbers are removed
     num = nums.to_i + 1
     while UNIQUE_USERNAMES.include?("#{core_name}#{num}")
+      # if (username == "demetris10")
+      #   binding.pry
+      # end
       num += 1
     end
     "#{core_name}#{num.to_s}"
