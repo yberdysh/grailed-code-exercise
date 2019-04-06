@@ -41,10 +41,10 @@ class User < ActiveRecord::Base
 
   def resolve_collision
     username = self.username
-    nums = username.scan( /\d+$/ ).first || "1"
+    nums = username.scan( /\d+$/ ).first || "0"
     nums_len = nums.length
-    core_name = username.last =~ /\D/ ? username : username[0...nums_len*-1]
-    num = nums.to_i == 0 ? nums.to_i + 1 : nums.to_i
+    core_name = username[-1] =~ /\D/ ? username : username[0...nums_len*-1]
+    num = nums.to_i + 1
     while UNIQUE_USERNAMES.include?("#{core_name}#{num}")
       num += 1
     end
