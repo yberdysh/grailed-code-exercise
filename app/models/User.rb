@@ -1,8 +1,8 @@
 require 'set'
 
 class User < ActiveRecord::Base
-  UNIQUE_USERNAMES = Set.new
-  # using constant that caches unique usernames and has direct lookup
+  @@unique_usernames = Set.new
+  # using class variable that caches unique usernames and has direct lookup
 
   def self.find_users_with_disallowed
     User.all.select{|user| user.check_if_disallowed}
@@ -24,8 +24,8 @@ class User < ActiveRecord::Base
   def self.resolve_collisions(dry_run = nil)
     affected_rows = []
     self.all.each do |user|
-      if !UNIQUE_USERNAMES.include?(user.username)
-        UNIQUE_USERNAMES.add(user.username)
+      if !@@unique_usernames.include?(user.username)
+        @@unique_usernames.add(user.username)
         # adds a newly seen unique username to the cache
       else
         # handles a collision if we find a name we've seen before
@@ -33,6 +33,7 @@ class User < ActiveRecord::Base
         affected_rows << user
       end
     end
+    User.empty_cache
     return affected_rows
   end
 
@@ -42,7 +43,7 @@ class User < ActiveRecord::Base
     new_name = self.resolve_collision
     self.username = new_name
     self.save if !dry_run
-    UNIQUE_USERNAMES.add(new_name)
+    @@unique_usernames.add(new_name)
   end
 
 
@@ -55,7 +56,7 @@ class User < ActiveRecord::Base
     core_name = username[-1] =~ /\D/ ? username : username[0...nums_len*-1]
     # username after any trailing numbers are removed
     num = nums.to_i + 1
-    while UNIQUE_USERNAMES.include?("#{core_name}#{num}")
+    while @@unique_usernames.include?("#{core_name}#{num}")
       num += 1
     end
     "#{core_name}#{num.to_s}"
@@ -64,5 +65,9 @@ class User < ActiveRecord::Base
 
   def check_if_disallowed
     DisallowedUsername.disallowed_usernames.include?(self.username.downcase)
+  end
+
+  def self.empty_cache
+    @@unique_usernames = Set.new
   end
 end
