@@ -19,6 +19,7 @@ class User < ActiveRecord::Base
     return affected_rows if dry_run
   end
 
+
   def self.resolve_collisions(dry_run = nil)
     affected_rows = []
     self.all.each do |user|
@@ -43,6 +44,7 @@ class User < ActiveRecord::Base
     UNIQUE_USERNAMES.add(new_name)
   end
 
+
   def resolve_collision
     # acts on the instance of user that needs to resolve a collision and returns a new unique name
     username = self.username
@@ -57,6 +59,7 @@ class User < ActiveRecord::Base
     end
     "#{core_name}#{num.to_s}"
   end
+
 
   def check_if_disallowed
     DisallowedUsername.disallowed_usernames.include?(self.username.downcase)
