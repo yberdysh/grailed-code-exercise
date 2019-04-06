@@ -12,11 +12,8 @@ class User < ActiveRecord::Base
     affected_rows = []
     names_to_fix = self.find_users_with_disallowed
     names_to_fix.each do |user|
-      new_name = user.resolve_collision
-      user.username = new_name
-      user.save if !dry_run
+      user.handle_found_collision(dry_run)
       affected_rows << user
-      UNIQUE_USERNAMES.add(new_name)
     end
     return affected_rows if dry_run
   end
@@ -27,14 +24,19 @@ class User < ActiveRecord::Base
       if !UNIQUE_USERNAMES.include?(user.username)
         UNIQUE_USERNAMES.add(user.username)
       else
-        new_name = user.resolve_collision
-        user.username = new_name
-        user.save if !dry_run
+        user.handle_found_collision(dry_run)
         affected_rows << user
-        UNIQUE_USERNAMES.add(new_name)
       end
     end
     return affected_rows if dry_run
+  end
+
+
+  def handle_found_collision(dry_run = nil)
+    new_name = self.resolve_collision
+    self.username = new_name
+    self.save if !dry_run
+    UNIQUE_USERNAMES.add(new_name)
   end
 
   def resolve_collision
@@ -46,7 +48,7 @@ class User < ActiveRecord::Base
     while UNIQUE_USERNAMES.include?("#{core_name}#{num}")
       num += 1
     end
-    new_name = "#{core_name}#{num.to_s}"
+    "#{core_name}#{num.to_s}"
   end
 
   def check_if_disallowed
