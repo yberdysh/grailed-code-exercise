@@ -38,10 +38,10 @@ end
 def option2
   results = resolve_disallowed_and_duplicates(true)
   puts "Users impacted with disallowed usernames:"
-  puts results[0]
+  puts results.first
   puts "========================="
   puts "Users impacted with duplicate usernames:"
-  puts results[1]
+  puts results.second
   puts "DONE"
 end
 
