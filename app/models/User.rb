@@ -16,7 +16,7 @@ class User < ActiveRecord::Base
       user.handle_found_collision(dry_run)
       affected_rows << user
     end
-    return affected_rows if dry_run
+    return affected_rows
   end
 
 
@@ -32,7 +32,7 @@ class User < ActiveRecord::Base
         affected_rows << user
       end
     end
-    return affected_rows if dry_run
+    return affected_rows
   end
 
 
