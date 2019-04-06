@@ -14,9 +14,11 @@ class User < ActiveRecord::Base
     names_to_fix.each do |user|
       new_name = user.resolve_collision
       user.username = new_name
+      user.save if !dry_run
       affected_rows << user
       UNIQUE_USERNAMES.add(new_name)
     end
+    return affected_rows if dry_run
   end
 
   def self.resolve_collisions(dry_run = nil)
@@ -27,11 +29,12 @@ class User < ActiveRecord::Base
       else
         new_name = user.resolve_collision
         user.username = new_name
+        user.save if !dry_run
         affected_rows << user
         UNIQUE_USERNAMES.add(new_name)
       end
     end
-    affected_rows
+    return affected_rows if dry_run
   end
 
   def resolve_collision
