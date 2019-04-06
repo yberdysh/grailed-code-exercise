@@ -1,11 +1,4 @@
-# require_relative "../config/environment.rb"
-# require_relative "../app/models/User.rb"
-# require_relative "../app/models/DisallowedUsername.rb"
-require 'rubygems'
-ENV["RAILS_ENV"] ||= 'test'
 require File.expand_path("../../config/environment", __FILE__)
-
-# binding.pry
 
 RSpec.configure do |config|
   # rspec-expectations config goes here. You can use an alternate

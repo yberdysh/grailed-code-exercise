@@ -61,7 +61,6 @@ PLATFORMS
 
 DEPENDENCIES
   activerecord
-  activesupport
   pry
   rake
   require_all
